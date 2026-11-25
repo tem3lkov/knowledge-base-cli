@@ -1,0 +1,22 @@
+[project]
+name = "knowledge"
+version = "0.1.0"
+description = "A small command-line knowledge base."
+readme = "README.md"
+authors = [
+    { name = "Todor Temelkov", email = "todor.r.temelkov@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+knowledge = "knowledge:main"
+
+[build-system]
+requires = ["uv_build>=0.13.10,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
