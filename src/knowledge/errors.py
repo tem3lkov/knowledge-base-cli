@@ -11,6 +11,8 @@ class ValidationError(KnowledgeError):
 
 
 class ItemNotFoundError(KnowledgeError):
+    """The requested item does not exist."""
+
     exit_code = 3
 
     def __init__(self, item_id: int) -> None:

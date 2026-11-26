@@ -19,7 +19,10 @@ CREATE TABLE IF NOT EXISTS items (
 
 class SqliteKnowledgeRepository(KnowledgeRepository):
     def __init__(self, db_path: Path) -> None:
-        error_message = f"Cannot open knowledge base at '{db_path}'. The file may be corrupted or not a database."
+        error_message = (
+            f"Cannot open knowledge base at '{db_path}'. "
+            "The file may be corrupted or not a database."
+        )
 
         try:
             db_path.parent.mkdir(parents=True, exist_ok=True)

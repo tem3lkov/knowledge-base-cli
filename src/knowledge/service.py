@@ -21,7 +21,7 @@ class KnowledgeService:
             raise ItemNotFoundError(item_id)
         return item
 
-    def list_items(self) -> list[KnowledgeItem]:
+    def list_all(self) -> list[KnowledgeItem]:
         return self._repository.list_all()
 
     def search(self, text: str) -> list[KnowledgeItem]:

@@ -17,6 +17,7 @@ def resolve_db_path(cli_value: str | None) -> Path:
 
 
 def run(argv: list[str]) -> int:
+    """Run one command and return the exit code. The only place that catches errors."""
     args = build_parser().parse_args(argv)
     try:
         with SqliteKnowledgeRepository(resolve_db_path(args.db)) as repository:

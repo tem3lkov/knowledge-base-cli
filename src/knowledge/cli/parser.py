@@ -17,7 +17,9 @@ def positive_int(value: str) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     common = argparse.ArgumentParser(add_help=False)
-    common.add_argument("--db", help="Path to the database file.")
+    common.add_argument(
+        "--db", help="Path to the database file (default: ~/.knowledge/knowledge.db)."
+    )
     common.add_argument(
         "--debug", action="store_true", help="Show the traceback on unexpected errors."
     )
@@ -30,8 +32,8 @@ def build_parser() -> argparse.ArgumentParser:
     add = subparsers.add_parser(
         "add", parents=[common], help="Add a new item with a title and content."
     )
-    add.add_argument("title")
-    add.add_argument("content")
+    add.add_argument("title", help="Short title (one line).")
+    add.add_argument("content", help="The text to store.")
     add.set_defaults(handler=commands.handle_add)
 
     list_cmd = subparsers.add_parser("list", parents=[common], help="List all items.")

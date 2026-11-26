@@ -10,7 +10,7 @@ def handle_add(args: Namespace, service: KnowledgeService) -> None:
 
 
 def handle_list(args: Namespace, service: KnowledgeService) -> None:
-    print(formatting.format_list(service.list_items()))
+    print(formatting.format_list(service.list_all()))
 
 
 def handle_show(args: Namespace, service: KnowledgeService) -> None:
