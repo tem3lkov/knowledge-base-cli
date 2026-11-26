@@ -10,7 +10,7 @@ def format_list(items: list[KnowledgeItem]) -> str:
 
 def format_item(item: KnowledgeItem) -> str:
     created = item.created_at.strftime("%Y-%m-%d %H:%M")
-    return f"Title: {item.title}\n\n{item.content}\n\nCreated: {created} UTC"
+    return f"Title: {item.title}\nCreated: {created} UTC\n\n{item.content}"
 
 
 def format_search_results(items: list[KnowledgeItem], text: str) -> str:

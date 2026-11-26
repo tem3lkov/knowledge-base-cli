@@ -1,4 +1,3 @@
-# cli/app.py
 import os
 import sys
 import traceback

@@ -1,4 +1,3 @@
-# tests/conftest.py
 import pytest
 
 from knowledge.service import KnowledgeService

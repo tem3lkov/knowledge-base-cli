@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from knowledge.errors import StorageError
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS items (
 class SqliteKnowledgeRepository(KnowledgeRepository):
     def __init__(self, db_path: Path) -> None:
         error_message = f"Cannot open knowledge base at '{db_path}'. The file may be corrupted or not a database."
-        
+
         try:
             db_path.parent.mkdir(parents=True, exist_ok=True)
             self._conn = sqlite3.connect(db_path)
@@ -42,7 +42,7 @@ class SqliteKnowledgeRepository(KnowledgeRepository):
         self._conn.close()
 
     def add(self, title: str, content: str) -> KnowledgeItem:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         timestamp = now.isoformat()
         try:
             with self._conn:

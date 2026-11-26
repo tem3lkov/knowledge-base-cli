@@ -1,4 +1,3 @@
-# tests/test_service.py
 import pytest
 
 from knowledge.errors import ItemNotFoundError, ValidationError
@@ -37,6 +36,7 @@ def test_search_is_case_insensitive_including_cyrillic(service):
 
     assert [item.title for item in service.search("ДОКЕР")] == ["Докер"]
     assert [item.title for item in service.search("python")] == ["Python"]
+
 
 def test_delete_missing_id_raises_not_found(service):
     with pytest.raises(ItemNotFoundError):

@@ -1,4 +1,3 @@
-# cli/commands.py
 from argparse import Namespace
 
 from knowledge.cli import formatting

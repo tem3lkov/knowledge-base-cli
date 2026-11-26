@@ -35,6 +35,7 @@ def test_corrupted_file_raises_storage_error(tmp_path):
     with pytest.raises(StorageError):
         SqliteKnowledgeRepository(bad_file)
 
+
 def test_get_returns_item_or_none(db_path):
     with SqliteKnowledgeRepository(db_path) as repo:
         created = repo.add("Docker", "Container platform.")

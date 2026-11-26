@@ -1,4 +1,5 @@
 import pytest
+
 from knowledge.cli.app import run
 
 
