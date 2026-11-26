@@ -2,6 +2,8 @@ import argparse
 
 from knowledge.cli import commands
 
+MAX_ID = 2**63 - 1
+
 
 def positive_int(value: str) -> int:
     try:
@@ -12,6 +14,8 @@ def positive_int(value: str) -> int:
         )
     if number < 1:
         raise argparse.ArgumentTypeError("ID must be a positive number.")
+    if number > MAX_ID:
+        raise argparse.ArgumentTypeError("ID is too large.")
     return number
 
 
