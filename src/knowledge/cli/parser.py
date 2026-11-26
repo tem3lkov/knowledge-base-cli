@@ -2,7 +2,7 @@ import argparse
 
 from knowledge.cli import commands
 
-MAX_ID = 2**63 - 1
+MAX_ID = 2**63 - 1  # SQLite stores integers as signed 64-bit numbers
 
 
 def positive_int(value: str) -> int:
