@@ -41,4 +41,6 @@ def run(argv: list[str]) -> int:
 
 
 def main() -> int:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
     return run(sys.argv[1:])
