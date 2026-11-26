@@ -1,3 +1,4 @@
+import io
 import os
 import sys
 import traceback
@@ -41,6 +42,7 @@ def run(argv: list[str]) -> int:
 
 
 def main() -> int:
-    sys.stdout.reconfigure(encoding="utf-8")
-    sys.stderr.reconfigure(encoding="utf-8")
+    for stream in (sys.stdout, sys.stderr):
+        if isinstance(stream, io.TextIOWrapper):
+            stream.reconfigure(encoding="utf-8")
     return run(sys.argv[1:])
