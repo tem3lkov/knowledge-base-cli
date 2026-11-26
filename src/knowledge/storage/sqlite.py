@@ -19,16 +19,13 @@ CREATE TABLE IF NOT EXISTS items (
 
 class SqliteKnowledgeRepository(KnowledgeRepository):
     def __init__(self, db_path: Path) -> None:
-        error_message = (
-            f"Cannot open knowledge base at '{db_path}'. "
-            "The file may be corrupted or not a database."
-        )
+        error_prefix = f"Cannot open knowledge base at '{db_path}'"
 
         try:
             db_path.parent.mkdir(parents=True, exist_ok=True)
             self._conn = sqlite3.connect(db_path)
         except (sqlite3.Error, OSError) as err:
-            raise StorageError(error_message) from err
+            raise StorageError(f"{error_prefix}: {err}") from err
 
         try:
             self._conn.row_factory = sqlite3.Row
@@ -36,7 +33,7 @@ class SqliteKnowledgeRepository(KnowledgeRepository):
                 self._conn.execute(CREATE_TABLE)
         except sqlite3.Error as err:
             self._conn.close()
-            raise StorageError(error_message) from err
+            raise StorageError(f"{error_prefix}: {err}") from err
 
     def __enter__(self) -> "SqliteKnowledgeRepository":
         return self
