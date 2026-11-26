@@ -68,12 +68,16 @@ def test_missing_argument_exits_2_with_usage(db_path, capsys):
     assert "usage:" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("bad_id", ["abc", "0", "-1"])
+@pytest.mark.parametrize("bad_id", ["abc", "0", "-1", "99999999999999999999"])
 def test_invalid_id_exits_2(db_path, bad_id):
     with pytest.raises(SystemExit) as exc_info:
         run_cli(db_path, "show", bad_id)
 
     assert exc_info.value.code == 2
+
+
+def test_largest_valid_id_is_accepted(db_path):
+    assert run_cli(db_path, "show", "9223372036854775807") == 3
 
 
 def test_edit_changes_title(db_path, capsys):
