@@ -1,3 +1,4 @@
+import pytest
 from knowledge.cli.app import run
 
 
@@ -56,3 +57,19 @@ def test_unknown_id_exits_3_without_traceback(db_path, capsys):
     assert "No item with ID 42" in captured.err
     assert "Traceback" not in captured.err
     assert captured.out == ""
+
+
+def test_missing_argument_exits_2_with_usage(db_path, capsys):
+    with pytest.raises(SystemExit) as exc_info:
+        run_cli(db_path, "add", "Python")
+
+    assert exc_info.value.code == 2
+    assert "usage:" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("bad_id", ["abc", "0", "-1"])
+def test_invalid_id_exits_2(db_path, bad_id):
+    with pytest.raises(SystemExit) as exc_info:
+        run_cli(db_path, "show", bad_id)
+
+    assert exc_info.value.code == 2
