@@ -42,3 +42,8 @@ def test_get_returns_item_or_none(db_path):
 
         assert repo.get(created.id) == created
         assert repo.get(999) is None
+
+
+def test_update_missing_id_returns_none(db_path):
+    with SqliteKnowledgeRepository(db_path) as repo:
+        assert repo.update(42, "Title", "Content") is None

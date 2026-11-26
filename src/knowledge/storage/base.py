@@ -15,3 +15,6 @@ class KnowledgeRepository(ABC):
 
     @abstractmethod
     def delete(self, item_id: int) -> bool: ...
+
+    @abstractmethod
+    def update(self, item_id: int, title: str, content: str) -> KnowledgeItem | None: ...

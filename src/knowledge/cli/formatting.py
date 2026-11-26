@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from knowledge.models import KnowledgeItem
 
 
@@ -8,9 +10,15 @@ def format_list(items: list[KnowledgeItem]) -> str:
     return "\n".join(f"{item.id:>{width}} | {item.title}" for item in items)
 
 
+def _local_time(moment: datetime) -> str:
+    return moment.astimezone().strftime("%Y-%m-%d %H:%M")
+
+
 def format_item(item: KnowledgeItem) -> str:
-    created = item.created_at.strftime("%Y-%m-%d %H:%M")
-    return f"Title: {item.title}\nCreated: {created} UTC\n\n{item.content}"
+    text = f"Title: {item.title}\nCreated: {_local_time(item.created_at)}"
+    if item.updated_at != item.created_at:
+        text += f"\nUpdated: {_local_time(item.updated_at)}"
+    return f"{text}\n\n{item.content}"
 
 
 def format_search_results(items: list[KnowledgeItem], text: str) -> str:

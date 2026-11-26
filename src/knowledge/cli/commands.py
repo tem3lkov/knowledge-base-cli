@@ -25,3 +25,8 @@ def handle_search(args: Namespace, service: KnowledgeService) -> None:
 def handle_delete(args: Namespace, service: KnowledgeService) -> None:
     service.delete(args.id)
     print(f"Deleted item {args.id}.")
+
+
+def handle_edit(args: Namespace, service: KnowledgeService) -> None:
+    item = service.update(args.id, title=args.title, content=args.content)
+    print(f"Updated item {item.id}: {item.title}")

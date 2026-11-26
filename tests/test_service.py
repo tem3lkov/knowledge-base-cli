@@ -41,3 +41,34 @@ def test_search_is_case_insensitive_including_cyrillic(service):
 def test_delete_missing_id_raises_not_found(service):
     with pytest.raises(ItemNotFoundError):
         service.delete(42)
+
+
+def test_update_changes_only_given_fields(service):
+    item = service.add("Docker", "Old content")
+
+    updated = service.update(item.id, title="Docker Engine")
+
+    assert updated.title == "Docker Engine"
+    assert updated.content == "Old content"
+    assert updated.id == item.id
+    assert updated.created_at == item.created_at
+
+
+def test_update_without_fields_is_rejected(service):
+    item = service.add("Docker", "text")
+
+    with pytest.raises(ValidationError):
+        service.update(item.id)
+
+
+def test_update_missing_id_raises_not_found(service):
+    with pytest.raises(ItemNotFoundError):
+        service.update(42, title="Anything")
+
+
+@pytest.mark.parametrize("title", ["", "   ", "Line 1\nLine 2"])
+def test_update_rejects_invalid_title(service, title):
+    item = service.add("Docker", "text")
+
+    with pytest.raises(ValidationError):
+        service.update(item.id, title=title)

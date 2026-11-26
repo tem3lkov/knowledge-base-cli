@@ -36,6 +36,24 @@ class KnowledgeService:
         if not self._repository.delete(item_id):
             raise ItemNotFoundError(item_id)
 
+    def update(
+        self, item_id: int, title: str | None = None, content: str | None = None
+    ) -> KnowledgeItem:
+        if title is None and content is None:
+            raise ValidationError("Nothing to update: pass --title and/or --content.")
+        current = self.get(item_id)
+        new_title = current.title if title is None else _require_title(title)
+        new_content = (
+            current.content
+            if content is None
+            else _require_text(content, "Content", MAX_CONTENT_LENGTH)
+        )
+
+        updated = self._repository.update(item_id, new_title, new_content)
+        if updated is None:
+            raise ItemNotFoundError(item_id)
+        return updated
+
 
 def _require_text(value: str, field: str, max_length: int) -> str:
     cleaned = value.strip()

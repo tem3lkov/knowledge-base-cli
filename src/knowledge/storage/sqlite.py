@@ -87,6 +87,18 @@ class SqliteKnowledgeRepository(KnowledgeRepository):
             raise StorageError(f"Could not delete item {item_id}.") from err
         return cursor.rowcount > 0
 
+    def update(self, item_id: int, title: str, content: str) -> KnowledgeItem | None:
+        now = datetime.now(UTC).isoformat()
+        try:
+            with self._conn:
+                cursor = self._conn.execute(
+                    "UPDATE items SET title = ?, content = ?, updated_at = ? WHERE id = ?",
+                    (title, content, now, item_id),
+                )
+        except sqlite3.Error as err:
+            raise StorageError("Could not update the item.") from err
+        return self.get(item_id) if cursor.rowcount else None
+
     @staticmethod
     def _to_item(row: sqlite3.Row) -> KnowledgeItem:
         return KnowledgeItem(
