@@ -74,3 +74,26 @@ def test_invalid_id_exits_2(db_path, bad_id):
         run_cli(db_path, "show", bad_id)
 
     assert exc_info.value.code == 2
+
+
+def test_edit_changes_title(db_path, capsys):
+    run_cli(db_path, "add", "Docker", "Containers")
+
+    assert run_cli(db_path, "edit", "1", "--title", "Docker Engine") == 0
+    run_cli(db_path, "show", "1")
+
+    out = capsys.readouterr().out
+    assert "Title: Docker Engine" in out
+    assert "Updated:" in out
+
+
+def test_edit_without_fields_exits_2(db_path, capsys):
+    run_cli(db_path, "add", "Docker", "Containers")
+
+    assert run_cli(db_path, "edit", "1") == 2
+    assert "Nothing to update" in capsys.readouterr().err
+
+
+def test_edit_missing_id_exits_3(db_path, capsys):
+    assert run_cli(db_path, "edit", "42", "--title", "Docker") == 3
+    assert "No item with ID 42" in capsys.readouterr().err
