@@ -69,14 +69,11 @@ class SqliteKnowledgeRepository(KnowledgeRepository):
         )
 
     def get(self, item_id: int) -> KnowledgeItem | None:
-        row = self._conn.execute(
-            "SELECT * FROM items WHERE id = ?",
-            (item_id,),
-        ).fetchone()
-        return self._to_item(row) if row else None
+        rows = self._read("SELECT * FROM items WHERE id = ?", (item_id,))
+        return self._to_item(rows[0]) if rows else None
 
     def list_all(self) -> list[KnowledgeItem]:
-        rows = self._conn.execute("SELECT * FROM items ORDER BY id").fetchall()
+        rows = self._read("SELECT * FROM items ORDER BY id")
         return [self._to_item(row) for row in rows]
 
     def delete(self, item_id: int) -> bool:
@@ -102,12 +99,23 @@ class SqliteKnowledgeRepository(KnowledgeRepository):
             raise StorageError("Could not update the item.") from err
         return self.get(item_id) if cursor.rowcount else None
 
+    def _read(self, sql: str, params: tuple = ()) -> list[sqlite3.Row]:
+        try:
+            return self._conn.execute(sql, params).fetchall()
+        except sqlite3.Error as err:
+            raise StorageError(
+                "Could not read the knowledge base. The file may be corrupted."
+            ) from err
+
     @staticmethod
     def _to_item(row: sqlite3.Row) -> KnowledgeItem:
-        return KnowledgeItem(
-            id=row["id"],
-            title=row["title"],
-            content=row["content"],
-            created_at=datetime.fromisoformat(row["created_at"]),
-            updated_at=datetime.fromisoformat(row["updated_at"]),
-        )
+        try:
+            return KnowledgeItem(
+                id=row["id"],
+                title=row["title"],
+                content=row["content"],
+                created_at=datetime.fromisoformat(row["created_at"]),
+                updated_at=datetime.fromisoformat(row["updated_at"]),
+            )
+        except (IndexError, TypeError, ValueError) as err:
+            raise StorageError("The knowledge base contains invalid data.") from err

@@ -1,3 +1,5 @@
+import sqlite3
+
 import pytest
 
 from knowledge.errors import StorageError
@@ -47,3 +49,14 @@ def test_get_returns_item_or_none(db_path):
 def test_update_missing_id_returns_none(db_path):
     with SqliteKnowledgeRepository(db_path) as repo:
         assert repo.update(42, "Title", "Content") is None
+
+
+def test_invalid_data_raises_storage_error(db_path):
+    with SqliteKnowledgeRepository(db_path) as repo:
+        repo.add("Python", "A programming language.")
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("UPDATE items SET created_at = 'not a date'")
+    conn.close()
+
+    with SqliteKnowledgeRepository(db_path) as repo, pytest.raises(StorageError):
+        repo.list_all()
