@@ -6,7 +6,7 @@ from knowledge.models import KnowledgeItem
 def format_list(items: list[KnowledgeItem]) -> str:
     if not items:
         return 'No items yet. Add one with: knowledge add "<title>" "<content>"'
-    width = len(str(items[-1].id))
+    width = max(len(str(item.id)) for item in items)
     return "\n".join(f"{item.id:>{width}} | {item.title}" for item in items)
 
 
