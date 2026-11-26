@@ -57,4 +57,12 @@ def build_parser() -> argparse.ArgumentParser:
     delete.add_argument("id", type=positive_int)
     delete.set_defaults(handler=commands.handle_delete)
 
+    edit = subparsers.add_parser(
+        "edit", parents=[common], help="Change the title and/or content of an item."
+    )
+    edit.add_argument("id", type=positive_int)
+    edit.add_argument("--title", help="New title.")
+    edit.add_argument("--content", help="New content.")
+    edit.set_defaults(handler=commands.handle_edit)
+
     return parser
