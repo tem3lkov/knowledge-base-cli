@@ -6,12 +6,11 @@ MAX_ID = 2**63 - 1  # SQLite stores integers as signed 64-bit numbers
 
 
 def positive_int(value: str) -> int:
-    try:
-        number = int(value)
-    except ValueError:
+    if not (value.isascii() and value.isdigit()):
         raise argparse.ArgumentTypeError(
             f"'{value}' is not a valid ID (expected a whole number)."
         )
+    number = int(value)
     if number < 1:
         raise argparse.ArgumentTypeError("ID must be a positive number.")
     if number > MAX_ID:
