@@ -61,6 +61,12 @@ def _require_text(value: str, field: str, max_length: int) -> str:
         raise ValidationError(f"{field} must not be empty.")
     if len(cleaned) > max_length:
         raise ValidationError(f"{field} must be at most {max_length} characters.")
+
+    try:
+        cleaned.encode("utf-8")
+    except UnicodeEncodeError:
+        raise ValidationError(f"{field} contains invalid characters.") from None
+    
     return cleaned
 
 
