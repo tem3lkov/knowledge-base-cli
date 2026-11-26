@@ -40,7 +40,7 @@ class KnowledgeService:
         self, item_id: int, title: str | None = None, content: str | None = None
     ) -> KnowledgeItem:
         if title is None and content is None:
-            raise ValidationError("Nothing to update: pass --title and/or --content.")
+            raise ValidationError("Nothing to update: give a new title and/or content.")
         current = self.get(item_id)
         new_title = current.title if title is None else _require_title(title)
         new_content = (

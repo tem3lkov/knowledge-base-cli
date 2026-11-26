@@ -1,3 +1,5 @@
+import sqlite3
+
 import pytest
 
 from knowledge.cli.app import run
@@ -101,3 +103,22 @@ def test_edit_without_fields_exits_2(db_path, capsys):
 def test_edit_missing_id_exits_3(db_path, capsys):
     assert run_cli(db_path, "edit", "42", "--title", "Docker") == 3
     assert "No item with ID 42" in capsys.readouterr().err
+
+
+def test_database_with_wrong_schema_exits_4_without_traceback(db_path, capsys):
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("CREATE TABLE items (id INTEGER PRIMARY KEY, other TEXT)")
+        conn.execute("INSERT INTO items (other) VALUES ('x')")
+    conn.close()
+
+    code = run_cli(db_path, "list")
+    captured = capsys.readouterr()
+
+    assert code == 4
+    assert "invalid data" in captured.err
+    assert "Traceback" not in captured.err
+
+
+def test_empty_db_path_exits_2(capsys):
+    assert run(["list", "--db", ""]) == 2
+    assert "Database path must not be empty." in capsys.readouterr().err

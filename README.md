@@ -91,7 +91,8 @@ its own exit code:
 
 ```text
 $ uv run knowledge show 42
-Error: No item with ID 42. Use 'knowledge list' to see all IDs.
+Error: No item with ID 42.
+Use 'knowledge list' to see all IDs.
 
 $ uv run knowledge add "" "text"
 Error: Title must not be empty.
@@ -167,11 +168,12 @@ so it is not slower.
 The tests follow the requirements and the error cases from the task:
 
 - **Storage:** data survives reopening the database, IDs are not reused, a corrupted
-  file gives a clear error.
+  file or invalid data in it gives a clear error.
 - **Service:** empty input, multi-line titles, invalid characters, missing IDs,
   case-insensitive search (including Cyrillic), updating only the given fields.
 - **CLI (end to end):** every command with its output and exit code, missing and
-  invalid arguments (including IDs too large for SQLite), and that no traceback is shown.
+  invalid arguments (including IDs too large for SQLite), a database with the wrong
+  structure, and that no traceback is shown.
 
 They use a temporary database (`tmp_path`) and pytest's `capsys` to check the output.
 

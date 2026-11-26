@@ -16,9 +16,7 @@ class ItemNotFoundError(KnowledgeError):
     exit_code = 3
 
     def __init__(self, item_id: int) -> None:
-        super().__init__(
-            f"No item with ID {item_id}. Use 'knowledge list' to see all IDs."
-        )
+        super().__init__(f"No item with ID {item_id}.")
 
 
 class StorageError(KnowledgeError):
