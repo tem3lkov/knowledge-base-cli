@@ -10,7 +10,7 @@ requires-python = ">=3.12"
 dependencies = []
 
 [project.scripts]
-knowledge = "knowledge:main"
+knowledge = "knowledge.cli.app:main"
 
 [build-system]
 requires = ["uv_build>=0.13.10,<0.14.0"]
