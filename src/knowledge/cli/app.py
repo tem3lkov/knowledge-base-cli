@@ -19,9 +19,19 @@ def resolve_db_path(cli_value: str | None) -> Path:
 
 def run(argv: list[str]) -> int:
     args = build_parser().parse_args(argv)
-    with SqliteKnowledgeRepository(resolve_db_path(args.db)) as repository:
-        args.handler(args, KnowledgeService(repository))
-    return 0
+    try:
+        with SqliteKnowledgeRepository(resolve_db_path(args.db)) as repository:
+            service = KnowledgeService(repository)
+            args.handler(args, service)
+        return 0
+    except KnowledgeError as error:
+        print(f"Error: {error}", file=sys.stderr)
+        return error.exit_code
+    except Exception:
+        if args.debug:
+            traceback.print_exc()
+        print("Unexpected error. Run again with --debug for details.", file=sys.stderr)
+        return 1
 
 
 def main() -> int:
