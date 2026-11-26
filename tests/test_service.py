@@ -72,3 +72,8 @@ def test_update_rejects_invalid_title(service, title):
 
     with pytest.raises(ValidationError):
         service.update(item.id, title=title)
+
+
+def test_invalid_characters_are_rejected(service):
+    with pytest.raises(ValidationError):
+        service.add("bad\udcff", "text")
