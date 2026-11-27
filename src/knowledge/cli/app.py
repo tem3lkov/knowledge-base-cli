@@ -44,5 +44,5 @@ def run(argv: list[str]) -> int:
 def main() -> int:
     for stream in (sys.stdout, sys.stderr):
         if isinstance(stream, io.TextIOWrapper):
-            stream.reconfigure(encoding="utf-8")
+            stream.reconfigure(encoding="utf-8", errors="backslashreplace")
     return run(sys.argv[1:])
