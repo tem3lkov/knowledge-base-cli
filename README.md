@@ -86,7 +86,8 @@ uv run knowledge add -- "-x is a flag" "text"
 
 ### Where the data is stored
 
-By default in `~/.knowledge/knowledge.db`. Another file can be used with `--db PATH`
+By default in `~/.knowledge/knowledge.db` (on Windows `C:\Users\<name>\.knowledge\knowledge.db`).
+To start over, delete that file. Another file can be used with `--db PATH`
 or the `KNOWLEDGE_DB` environment variable (`--db` wins). Options go after the command:
 
 ```bash
