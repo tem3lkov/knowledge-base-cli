@@ -5,11 +5,18 @@ import traceback
 from pathlib import Path
 
 from knowledge.cli.parser import build_parser
-from knowledge.errors import ItemNotFoundError, KnowledgeError, ValidationError
+from knowledge.errors import (
+    ItemNotFoundError,
+    KnowledgeError,
+    StorageError,
+    ValidationError,
+)
 from knowledge.service import KnowledgeService
 from knowledge.storage.sqlite import SqliteKnowledgeRepository
 
 DEFAULT_DB_PATH = Path.home() / ".knowledge" / "knowledge.db"
+
+EXIT_CODES = {ValidationError: 2, ItemNotFoundError: 3, StorageError: 4}
 
 
 def resolve_db_path(cli_value: str | None) -> Path:
@@ -30,10 +37,10 @@ def run(argv: list[str]) -> int:
     except ItemNotFoundError as error:
         print(f"Error: {error}", file=sys.stderr)
         print("Use 'knowledge list' to see all IDs.", file=sys.stderr)
-        return error.exit_code
+        return EXIT_CODES.get(type(error), 1)
     except KnowledgeError as error:
         print(f"Error: {error}", file=sys.stderr)
-        return error.exit_code
+        return EXIT_CODES.get(type(error), 1)
     except Exception:
         if args.debug:
             traceback.print_exc()
