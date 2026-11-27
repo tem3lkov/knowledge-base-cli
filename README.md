@@ -8,6 +8,7 @@ A small command-line app for storing, searching and managing short notes.
 ## Requirements
 
 - [uv](https://docs.astral.sh/uv/) – it also installs the right Python version (3.12).
+  Without uv, Python 3.12+ and pip work too (see below).
 
 ## Setup
 
@@ -16,6 +17,16 @@ git clone https://github.com/tem3lkov/knowledge-base-cli.git
 cd knowledge-base-cli
 uv sync
 ```
+
+Without uv:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e . pytest
+```
+
+Then run `knowledge ...` and `pytest` directly.
 
 ## Usage
 
@@ -67,6 +78,12 @@ Deleted item 1.
 
 `uv run knowledge --help` and `uv run knowledge <command> --help` show all options.
 
+A title that starts with `-` would be read as an option, so put `--` before it:
+
+```bash
+uv run knowledge add -- "-x is a flag" "text"
+```
+
 ### Where the data is stored
 
 By default in `~/.knowledge/knowledge.db`. Another file can be used with `--db PATH`
@@ -78,15 +95,15 @@ uv run knowledge list --db /tmp/test.db
 
 ### Errors
 
-Errors are printed as one clear line, never as a Python traceback, and each kind has
-its own exit code:
+Errors are printed as a short, clear message, never as a Python traceback, and each
+kind has its own exit code:
 
 | Exit code | Meaning | Example |
 | --- | --- | --- |
 | 0 | Success | |
 | 2 | Invalid input | missing argument, `show abc`, empty title |
 | 3 | Item not found | `show 42` when there is no item 42 |
-| 4 | The database cannot be opened | the file is corrupted or not a database |
+| 4 | The database cannot be opened or read | the file is corrupted or not a database |
 | 1 | Unexpected error | a bug; `--debug` shows the traceback |
 
 ```text
@@ -111,7 +128,7 @@ The tests also run on every push and pull request with GitHub Actions.
 ```text
 src/knowledge/
 ├── models.py          # KnowledgeItem
-├── errors.py          # error classes with their exit codes
+├── errors.py          # error classes
 ├── service.py         # KnowledgeService – validation and business rules
 ├── storage/
 │   ├── base.py        # KnowledgeRepository – storage interface
