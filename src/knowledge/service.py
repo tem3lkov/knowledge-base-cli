@@ -25,7 +25,7 @@ class KnowledgeService:
         return self._repository.list_all()
 
     def search(self, text: str) -> list[KnowledgeItem]:
-        query = _require_text(text, "Search text", MAX_TITLE_LENGTH).casefold()
+        query = _require_text(text, "Search text", MAX_CONTENT_LENGTH).casefold()
         return [
             item
             for item in self._repository.list_all()
