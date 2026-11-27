@@ -1,3 +1,5 @@
+import unicodedata
+
 from knowledge.errors import ItemNotFoundError, ValidationError
 from knowledge.models import KnowledgeItem
 from knowledge.storage.base import KnowledgeRepository
@@ -65,6 +67,8 @@ def _require_text(value: str, field: str, max_length: int) -> str:
         cleaned.encode("utf-8")
     except UnicodeEncodeError:
         raise ValidationError(f"{field} contains invalid characters.") from None
+    if any(unicodedata.category(ch) == "Cc" and ch not in "\t\n\r" for ch in cleaned):
+        raise ValidationError(f"{field} contains invalid characters.")
 
     return cleaned
 

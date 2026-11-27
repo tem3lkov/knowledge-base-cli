@@ -74,6 +74,10 @@ def test_update_rejects_invalid_title(service, title):
         service.update(item.id, title=title)
 
 
-def test_invalid_characters_are_rejected(service):
+@pytest.mark.parametrize(
+    "title, content",
+    [("bad\udcff", "text"), ("\x1b[2J", "text"), ("Title", "\x1b[31mred")],
+)
+def test_invalid_characters_are_rejected(service, title, content):
     with pytest.raises(ValidationError):
-        service.add("bad\udcff", "text")
+        service.add(title, content)
